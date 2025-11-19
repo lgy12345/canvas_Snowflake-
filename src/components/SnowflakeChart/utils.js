@@ -102,10 +102,12 @@ export const calculateTooltipPosition = (section, rect, centerX, centerY, maxRad
   };
 };
 
-// 提取分数数据
+// 提取分数数据（使用 Map 和 reduce 进行高效的数据转换）
 export const extractScores = (data, dimensions) => {
-  return dimensions.map((dim) => {
-    const item = data.find(d => d.name === dim);
-    return item ? item.value : 0;
-  });
+  const dataMap = data.reduce((map, item) => {
+    map.set(item.name, item.value);
+    return map;
+  }, new Map());
+  
+  return dimensions.map(dim => dataMap.get(dim) || 0);
 };
