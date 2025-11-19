@@ -64,9 +64,6 @@ function App() {
     setChartType('COMPANY');
   };
 
-  const handleSectionClick = (index) => {
-    alert(`点击了维度索引: ${index} (${data[index].name})`);
-  };
 
   return (
     <div className="app">
@@ -168,7 +165,6 @@ function App() {
             data={data}
             type={chartType}
             highlightSection={highlightSection}
-            onSectionClick={handleSectionClick}
           />
         </div>
       </div>

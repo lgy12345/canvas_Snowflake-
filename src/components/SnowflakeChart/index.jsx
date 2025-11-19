@@ -23,6 +23,8 @@ const SnowflakeChart = ({
   const canvasRef = useRef(null);
   const [hoveredSection, setHoveredSection] = useState(null);
   const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, data: null });
+  const [notifications, setNotifications] = useState([]);
+  const notificationIdRef = useRef(0);
 
   // 提取分数数据（记忆化）
   const scores = useMemo(() => extractScores(data, dimensions), [data]);
@@ -110,15 +112,38 @@ const SnowflakeChart = ({
 
   // 点击处理
   const handleClick = useCallback((e) => {
-    if (type !== 'COMPANY' || !onSectionClick) return;
-    
     const rect = canvasRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
     const section = detectSection(x, y, centerX, centerY, maxRadius, dimensions.length);
     if (section !== null) {
-      onSectionClick(section);
+      // 创建新通知
+      const id = notificationIdRef.current++;
+      const newNotification = {
+        id,
+        section,
+        fadeOut: false
+      };
+      
+      setNotifications(prev => [...prev, newNotification]);
+      
+      // 3秒后开始淡出
+      setTimeout(() => {
+        setNotifications(prev => 
+          prev.map(n => n.id === id ? { ...n, fadeOut: true } : n)
+        );
+        
+        // 淡出动画完成后移除
+        setTimeout(() => {
+          setNotifications(prev => prev.filter(n => n.id !== id));
+        }, 300);
+      }, 3000);
+      
+      // 如果有回调函数，也调用它
+      if (type === 'COMPANY' && onSectionClick) {
+        onSectionClick(section);
+      }
     }
   }, [type, onSectionClick]);
 
@@ -217,6 +242,24 @@ const SnowflakeChart = ({
           </div>
         </div>
       )}
+      
+      {/* 顶部通知列表 */}
+      <div className="notifications-container">
+        {notifications.map((notif, index) => (
+          <div 
+            key={notif.id}
+            className={`top-notification ${notif.fadeOut ? 'fade-out' : ''}`}
+            style={{
+              top: `${20 + index * 70}px`
+            }}
+          >
+            <span className="notification-icon">✓</span>
+            <span className="notification-text">
+              点击了雪花图的第 {notif.section} 个区域 ({dimensions[notif.section].toUpperCase()})
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
