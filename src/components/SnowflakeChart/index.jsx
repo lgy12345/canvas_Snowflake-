@@ -118,34 +118,37 @@ const SnowflakeChart = ({
     
     const section = detectSection(x, y, centerX, centerY, maxRadius, dimensions.length);
     if (section !== null) {
-      // 创建新通知
-      const id = notificationIdRef.current++;
-      const newNotification = {
-        id,
-        section,
-        fadeOut: false
-      };
-      
-      setNotifications(prev => [...prev, newNotification]);
-      
-      // 3秒后开始淡出
-      setTimeout(() => {
-        setNotifications(prev => 
-          prev.map(n => n.id === id ? { ...n, fadeOut: true } : n)
-        );
+      // 只在 highlightSection 为 null (None) 时显示通知
+      if (highlightSection === null) {
+        // 创建新通知
+        const id = notificationIdRef.current++;
+        const newNotification = {
+          id,
+          section,
+          fadeOut: false
+        };
         
-        // 淡出动画完成后移除
+        setNotifications(prev => [...prev, newNotification]);
+        
+        // 3秒后开始淡出
         setTimeout(() => {
-          setNotifications(prev => prev.filter(n => n.id !== id));
-        }, 300);
-      }, 3000);
+          setNotifications(prev => 
+            prev.map(n => n.id === id ? { ...n, fadeOut: true } : n)
+          );
+          
+          // 淡出动画完成后移除
+          setTimeout(() => {
+            setNotifications(prev => prev.filter(n => n.id !== id));
+          }, 300);
+        }, 3000);
+      }
       
       // 如果有回调函数，也调用它
       if (type === 'COMPANY' && onSectionClick) {
         onSectionClick(section);
       }
     }
-  }, [type, onSectionClick]);
+  }, [type, onSectionClick, highlightSection]);
 
   // 计算标签位置和样式（记忆化）
   const labels = useMemo(() => {
