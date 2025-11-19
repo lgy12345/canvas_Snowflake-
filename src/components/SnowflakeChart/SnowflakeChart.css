@@ -1,0 +1,153 @@
+.snowflake-container {
+  position: relative;
+}
+
+.labels {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.label {
+  position: absolute;
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 自定义 Tooltip 样式 */
+.custom-tooltip {
+  position: fixed;
+  background: #000;
+  border-radius: 8px;
+  padding: 20px;
+  width: 340px;
+  max-width: 340px;
+  box-sizing: border-box;
+  z-index: 1000;
+  pointer-events: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  
+  /* 初始状态 */
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - 30px)) scale(0.95);
+  
+  /* 动画效果 */
+  animation: tooltipFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  
+  /* 位置变化时的过渡 */
+  transition: left 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              top 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tooltip 淡入动画 */
+@keyframes tooltipFadeIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 30px)) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 20px)) scale(1);
+  }
+}
+
+/* 小三角形指向圆盘 */
+.custom-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #000;
+}
+
+.tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  /* margin-bottom: 10px; */
+  white-space: nowrap;
+}
+
+.tooltip-number {
+  color: #dddddd;
+  font-size: 22px;
+}
+
+.tooltip-separator {
+  color: #6b7280;
+  font-size: 24px;
+  font-weight: 300;
+}
+
+.tooltip-title {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.tooltip-desc {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 14px;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.tooltip-analysis {
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.analysis-label {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.analysis-count {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.tooltip-checks {
+  display: flex;
+  gap: 8px;
+}
+
+.check-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.check-pass {
+  /* background: #10b981; */
+  border: 2px solid #22c55e;
+  color: #22c55e;
+}
+
+.check-fail {
+   border: 2px solid #ef4444;
+  color: #de7171;
+}
